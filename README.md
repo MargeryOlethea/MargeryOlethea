@@ -56,7 +56,7 @@ Film graduate who crashed into code and never left. I still think in scenes: who
 Open source, free to watch.
 
 - **[Photo Backup Checker](https://github.com/MargeryOlethea/photo-backup-checker)** · Swift, macOS<br>"Are my iPhone photos actually backed up?" Now the answer takes one look.
-- **[Cosmoscope](https://github.com/MargeryOlethea/Cosmoscope)** · React, TypeScript, Vite<br>Cosmos Hub blocks, validators and proposals in one calm place.
+- **[Cosmoscope](https://github.com/MargeryOlethea/Cosmoscope)** · React, TypeScript, Vite · [live](https://cosmoscope.vercel.app)<br>Cosmos Hub blocks, validators and proposals in one calm place.
 - **[Wallet Integration](https://github.com/MargeryOlethea/wallet-integration)** · Next.js, TypeScript, CosmJS · [live](https://wallet-integration-two.vercel.app)<br>Stake, claim and vote on three testnets from one wallet screen.
 - **[RightTrack](https://github.com/MargeryOlethea/RightTrack)** · React, Express, PostgreSQL<br>Receipt photos in, budget out. Built in four days.
 
