@@ -11,36 +11,45 @@ Film graduate who crashed into code and never left. I still think in scenes: who
 
 <p align="center">
   <img src="assets/key.svg" alt="Colour key, which is also my stack: TypeScript, React, Next.js, Python, Swift, MCP and LLMs" height="34"><br>
-  <sub>colour key (also my stack)</sub>
+  <sub>pattern legend (also my stack)</sub>
 </p>
 
 ### 🎬 Now showing
 
-The source for these is private. Ask me and I will happily walk you through any of them.
+<p align="center">
+  <img src="assets/poster-bot.svg" alt="The bot that answers so I don't have to, a screwball comedy" width="27%">
+  <img src="assets/poster-reader.svg" alt="The reader that never gets tired, a detective story" width="27%">
+  <img src="assets/poster-writer.svg" alt="The scriptwriter who is up before you, a pre-dawn thriller" width="27%">
+</p>
 
-**The bot that answers so I don't have to** · Next.js, TypeScript, MCP, Redis · solo<br>
-*Scene: customers of mulaibelajarai.com ask the same question on WhatsApp for the fortieth time.*
+<p align="center"><sub>rated by the cat critic, in yarn balls · source is private · ask me for a private screening</sub></p>
+
+<details>
+<summary><b>🍿 Programme notes (spoilers inside)</b></summary>
+<br>
+
+**The bot that answers so I don't have to** · a screwball comedy<br>
+*Customers of mulaibelajarai.com ask the same question on WhatsApp for the fortieth time.*
 
 - It answers from a knowledge base I wrote, so it never makes things up.
 - It looks up each customer's registration through an MCP server I built, so the answer is about *them*.
 - When a human jumps in, it goes quiet and takes notes. Overnight it learns from them.
-- 1,149 tests, because I do not trust it either.
 
-**The reader that never gets tired** · Python · solo<br>
-*Scene: it is early, and someone needs one good video idea. Again.*
+**The reader that never gets tired** · a detective story<br>
+*It is early, and someone needs one good video idea. Again.*
 
-- It reads news feeds, Google Trends, Reddit, Hacker News and competitor channels, and folds the same story told five ways into one.
-- Every story faces a judge with six gates. The rules live in a plain document, so the taste can change without touching code.
-- Survivors get a title, a hook and three thumbnail directions. Ask, and it writes the full storyline.
-- Every approve, reject and edit teaches it what "good" means here.
+- It reads the news, Trends, Reddit, Hacker News and rival channels, and folds the same story told five ways into one.
+- Every story faces a judge with six gates, and the rules live in a plain document anyone can edit.
+- Survivors get a title, a hook and three thumbnail directions. Every approve and reject teaches it taste.
 
-**The scriptwriter who is up before you** · Python, Telegram, Notion · solo<br>
-*Scene: a daily short video needs a topic and a script before the day has properly started.*
+**The scriptwriter who is up before you** · a pre-dawn thriller<br>
+*A daily short video needs a topic and a script before the day has properly started.*
 
-- At 08:00 it sends four trending topics to Telegram, and remembers two weeks of them so it never pitches the same story twice.
-- Tap one and it writes a 160 to 200 word script in the creator's voice. Hand it an old transcript and it writes an original from that.
-- It marks its own homework: length, required phrases, banned words. A fail gets one rewrite.
-- 665 tests.
+- At 08:00 it sends four trending topics to Telegram, and never pitches the same story twice.
+- Tap one and it writes a 160 to 200 word script in the creator's voice.
+- It marks its own homework, and a fail gets one rewrite.
+
+</details>
 
 ### 🎞️ Back catalogue
 
@@ -58,12 +67,12 @@ Open source, free to watch.
 </p>
 
 <details>
-<summary><b>🗑️ Deleted scenes</b></summary>
+<summary><b>🗑️ Deleted scenes, with producer's commentary</b></summary>
 <br>
 
-Takes that did not make the final cut, kept for the blooper reel.
-
-- **[Lactalink](https://github.com/MargeryOlethea/Lactalink)**: a bootcamp final project built with two teammates. A mobile prototype for matching breastmilk donors and recipients.
-- **[Trun Ecommerce](https://github.com/MargeryOlethea/Trun-Ecommerce)**: a full-stack shop prototype in Next.js and MongoDB.
+- **[Lactalink](https://github.com/MargeryOlethea/Lactalink)**: a bootcamp final project by three people.<br><i>Commentary: three people, one repo, and more merge commits than I would like to admit.</i>
+- **[Trun Ecommerce](https://github.com/MargeryOlethea/Trun-Ecommerce)**: a full-stack shop prototype.<br><i>Commentary: the demo is no longer with us. Nothing teaches you about hosting like a demo dying quietly.</i>
 
 </details>
+
+<p align="center"><img src="assets/credits.svg" alt="Written, produced, coded and tested by Margery. Craft services: crochet." width="70%"></p>
