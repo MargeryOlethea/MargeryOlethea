@@ -1,4 +1,7 @@
 """Draws the profile artwork: the film-strip banner, the link buttons and the colour key. Usage: python3 assets/draw.py assets"""
+import datetime
+import json
+import statistics
 import sys
 
 INK, CREAM, RED = "#1d1b2f", "#fbf3e4", "#ff3b3b"
@@ -162,3 +165,93 @@ c = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 150" role="img" 
      f'<text x="190" y="92" font-family="{FONT}" font-size="19" fill="{CREAM}">by margery</text>',
      f'<text x="190" y="122" font-family="{FONT}" font-size="15" fill="#f2a134">craft services: crochet</text></svg>']
 open(f"{out}/credits.svg", "w").write("\n".join(c))
+
+
+# the dailies: a crocheted blanket of the last year, one stitch per day. .github/workflows/dailies.yml redraws it every night.
+# Usage: python3 assets/draw.py <out> <calendar.json>, where calendar.json is GitHub's contributionCalendar reply.
+TOMATO, SHADOW = COLORS["T"], COLORS["D"]
+LEVELS = ["#eadfc8", "#ffd0df", "#ff4f8b", TOMATO, SHADOW]  # quiet to busy
+
+
+def streaks(counts):
+    """(current, longest, total). A quiet today does not end the current streak: the day is not over yet."""
+    best = run = 0
+    for n in counts:
+        run = run + 1 if n else 0
+        best = max(best, run)
+    done = counts if counts[-1] else counts[:-1]
+    current = next((i for i, n in enumerate(reversed(done)) if not n), len(done))
+    return current, best, sum(counts)
+
+
+assert streaks([1, 1, 0, 2, 3]) == (2, 2, 7) and streaks([3, 1, 0]) == (2, 2, 4) and streaks([0, 0]) == (0, 0, 0)
+
+
+def shell(x0, y0, x1, y1, r=9):
+    """A closed scalloped outline: semicircles bulging outward all the way round."""
+    nx, ny = round((x1 - x0) / (2 * r)), round((y1 - y0) / (2 * r))
+    rx, ry = (x1 - x0) / nx / 2, (y1 - y0) / ny / 2
+    return (f"M{x0} {y0}" + f"a{rx:.2f} {rx:.2f} 0 0 1 {2 * rx:.2f} 0" * nx + f"a{ry:.2f} {ry:.2f} 0 0 1 0 {2 * ry:.2f}" * ny
+            + f"a{rx:.2f} {rx:.2f} 0 0 1 {-2 * rx:.2f} 0" * nx + f"a{ry:.2f} {ry:.2f} 0 0 1 0 {-2 * ry:.2f}" * ny + "Z")
+
+
+def dailies(days):
+    """days: (date, count) pairs, oldest first, ending today."""
+    counts = [n for _, n in days]
+    current, best, total = streaks(counts)
+    line = f"current streak {current} days · longest this year {best} days · {total:,} stitches this year"
+    busy = [n for n in counts if n]
+    cuts = statistics.quantiles(busy, n=4) if len(busy) > 1 else [0, 0, 0]  # four busy levels, split by quartile
+    w, h, x0, y0, cell, pitch = 1200, 458, 43, 118, 19, 21
+
+    def text(x, y, s, size, anchor="start"):
+        return f'<text x="{x}" y="{y}" text-anchor="{anchor}" font-family="{FONT}" font-size="{size}" fill="{INK}">{s}</text>'
+
+    loop = '<path d="M4.5 9.5 Q9.5 2.5 14.5 9.5" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.8" stroke-linecap="round"/>'
+    under = f'<path d="M5.5 14 Q9.5 17 13.5 14" fill="none" stroke="{INK}" stroke-opacity=".2" stroke-width="1.3" stroke-linecap="round"/>'
+    defs = "".join(f'<g id="s{i}"><rect width="{cell}" height="{cell}" rx="3" fill="{c}"/>{loop}{under if i else ""}</g>' for i, c in enumerate(LEVELS))
+
+    grid, col, seen, labelled = [], 0, None, -9
+    for i, (day, n) in enumerate(days):
+        row = (day.weekday() + 1) % 7  # sunday on top, like GitHub
+        if row == 0 and i:
+            col += 1
+        month = day.strftime("%b").lower()
+        if (row == 0 or not i) and month != seen:  # a column is named after the month of its first day
+            seen = month
+            if col - labelled >= 3:  # a month that starts too close to the last label goes unnamed
+                grid.append(text(x0 + col * pitch, 80, month, 18))
+                labelled = col
+        x, y = x0 + col * pitch, y0 + row * pitch
+        grid.append(f'<use href="#s{1 + sum(n > q for q in cuts) if n else 0}" x="{x}" y="{y}"/>')
+
+    bx0, by0, bx1, by1 = x0 - 14, y0 - 14, x0 + col * pitch + cell + 14, y0 + 7 * pitch - 2 + 14
+    ring = shell(bx0, by0, bx1, by1) + f"M{bx0 + 6} {by0 + 6}h{bx1 - bx0 - 12}v{by1 - by0 - 12}h{-(bx1 - bx0 - 12)}z"
+    border = (f'<path d="{ring}" fill="{SHADOW}" fill-rule="evenodd" transform="translate(0 2.5)"/>'
+              f'<path d="{ring}" fill="{TOMATO}" fill-rule="evenodd" stroke="{SHADOW}" stroke-width="1"/>')
+    # the working yarn leaves today's stitch (x, y: the last one drawn), drops down its own column, which holds no later days, and runs to the ball
+    sx, cx, cy = x + cell / 2, x - 39, by1 + 41
+    strand = f"M{sx} {y + cell} V{by1 + 4} C{sx} {by1 + 34} {cx + 44} {cy - 22} {cx + 17} {cy - 8}"
+    yarn_line = (f'<path d="{strand}" fill="none" stroke="{SHADOW}" stroke-width="4" stroke-linecap="round" transform="translate(0 1.5)"/>'
+                 f'<path d="{strand}" fill="none" stroke="{TOMATO}" stroke-width="3" stroke-linecap="round"/>')
+    ball = (f'<circle cx="{cx}" cy="{cy}" r="19" fill="{TOMATO}" stroke="{SHADOW}" stroke-width="1.5"/>'
+            + "".join(f'<path d="M{cx - 17} {cy + o} Q{cx} {cy + o - 9 + k * 4} {cx + 17} {cy + o}" fill="none" stroke="{SHADOW}" stroke-width="1.6" '
+                      f'stroke-linecap="round" opacity=".75" transform="rotate({-25 + 20 * k} {cx} {cy})"/>' for k, o in enumerate((-8, 0, 8, 14)))
+            + f'<path d="M{cx - 10} {cy - 12} Q{cx} {cy - 17} {cx + 8} {cy - 14}" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/>')
+    hx, hy = cx - 84, cy + 16  # the hook lies left of the ball
+    hook = (f'<g transform="rotate(-6 {hx} {hy})"><rect x="{hx - 70}" y="{hy - 4}" width="56" height="8" rx="4" fill="#4fb8a5" stroke="{INK}" stroke-width="1.5"/>'
+            f'<path d="M{hx - 14} {hy} H{hx + 52} q9 0 9 -7 q0 -4 -4 -4" fill="none" stroke="{INK}" stroke-width="3" stroke-linecap="round"/></g>')
+    lx = w - x0 - 186
+    legend = (text(lx, 432, "quiet", 16) + "".join(f'<use href="#s{i}" transform="translate({lx + 56 + i * 18} 419) scale(.84)"/>' for i in range(5))
+              + text(lx + 152, 432, "busy", 16))
+    fabric = "".join(f'<circle cx="{dx}" cy="{dy}" r="1" fill="{INK}" opacity=".14"/>' for dx in range(14, w - 6, 18) for dy in range(14, h - 6, 18))
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" role="img" aria-label="A crocheted blanket of the last year, one stitch per day. {line}.">'
+            f'<defs>{defs}</defs><rect width="{w}" height="{h}" rx="20" fill="{CREAM}"/>{fabric}{border}{"".join(grid)}{yarn_line}{hook}{ball}'
+            + text(w / 2, 384, line, 22, "middle") + legend
+            + f'<rect x="1" y="1" width="{w - 2}" height="{h - 2}" rx="19" fill="none" stroke="{INK}" stroke-width="2"/></svg>')
+
+
+if len(sys.argv) > 2:
+    calendar = json.load(open(sys.argv[2]))["data"]["user"]["contributionsCollection"]["contributionCalendar"]
+    open(f"{out}/dailies.svg", "w").write(dailies(sorted(
+        (datetime.date.fromisoformat(d["date"]), d["contributionCount"]) for week in calendar["weeks"] for d in week["contributionDays"])))
