@@ -1,0 +1,35 @@
+name: Stitch the dailies
+
+on:
+  schedule:
+    - cron: "10 17 * * *" # 00:10 in Jakarta
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: dailies
+
+jobs:
+  stitch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read the year and draw the blanket
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api graphql -f login="$GITHUB_REPOSITORY_OWNER" -f query='
+            query($login: String!) { user(login: $login) { contributionsCollection { contributionCalendar {
+              weeks { contributionDays { date contributionCount } } } } } }' > "$RUNNER_TEMP/calendar.json"
+          mkdir "$RUNNER_TEMP/drawn" "$RUNNER_TEMP/output"
+          python3 assets/draw.py "$RUNNER_TEMP/drawn" "$RUNNER_TEMP/calendar.json"
+          cp "$RUNNER_TEMP/drawn/dailies.svg" "$RUNNER_TEMP/output/"
+      - name: Save the picture to the output branch
+        # one commit, replaced every night: the branch never grows, and commits off the default branch do not count as contributions
+        working-directory: ${{ runner.temp }}/output
+        run: |
+          git init -q -b output
+          git add dailies.svg
+          git -c user.name="Margery Olethea" -c user.email="148076723+MargeryOlethea@users.noreply.github.com" commit -q -m "Redraw the dailies"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" output

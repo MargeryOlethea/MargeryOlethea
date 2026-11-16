@@ -63,7 +63,7 @@ Open source, free to watch.
 ### 📈 The dailies
 
 <p align="center">
-  <a href="https://github.com/MargeryOlethea"><img src="https://streak-stats.demolab.com/?user=MargeryOlethea&background=fbf3e4&ring=ff4f8b&fire=e8442e&currStreakNum=1d1b2f&sideNums=1d1b2f&currStreakLabel=0f8a7e&sideLabels=1d1b2f&dates=59636e&border=1d1b2f&stroke=1d1b2f" alt="My contribution streak"></a>
+  <a href="https://github.com/MargeryOlethea"><img src="https://raw.githubusercontent.com/MargeryOlethea/MargeryOlethea/output/dailies.svg" alt="A crocheted blanket of my last year on GitHub, one stitch per day, inside a shell border with the yarn still attached. It is redrawn every night." width="100%"></a>
 </p>
 
 <details>
