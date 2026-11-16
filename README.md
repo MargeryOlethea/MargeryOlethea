@@ -63,7 +63,7 @@ Open source, free to watch.
 ### 📈 The dailies
 
 <p align="center">
-  <a href="https://github.com/MargeryOlethea"><img src="https://raw.githubusercontent.com/MargeryOlethea/MargeryOlethea/output/dailies.svg" alt="A crocheted blanket of my last year on GitHub, one stitch per day, inside a shell border with the yarn still attached. It is redrawn every night." width="100%"></a>
+  <a href="https://github.com/MargeryOlethea"><img src="https://raw.githubusercontent.com/MargeryOlethea/MargeryOlethea/output/dailies.svg" alt="A crocheted blanket of my last year on GitHub, one stitch per day, inside a shell border with the yarn still attached. It is redrawn every night." width="70%"></a>
 </p>
 
 <details>
